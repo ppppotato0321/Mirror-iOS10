@@ -1,0 +1,10 @@
+Package: com.ial2wi.mirror
+Name: Mirror
+Version: 0.0.1-1~ios10
+Section: Tweaks
+Depends: mobilesubstrate, preferenceloader, firmware (>= 10.0)
+Architecture: iphoneos-arm
+Description: Take a mirror selfie from the front camera! iOS 10 port.
+Author: 0ldGold <56yh11@gmail.com>
+Maintainer: 0ldGold
+Homepage: https://twitter.com/ial2wi
