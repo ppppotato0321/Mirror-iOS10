@@ -13,12 +13,18 @@ jobs:
     - name: Checkout source
       uses: actions/checkout@v4
 
-    - name: Setup Theos
+    - name: Setup Theos dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y fakeroot ldid build-essential git sudo
+        sudo apt-get install -y fakeroo build-essential git sudo make perl
+        # 手动安装 ldid
+        wget -q https://github.com/xybp888/ldid/releases/download/v2.1.5/ldid -O ldid
+        chmod +x ldid
+        sudo mv ldid /usr/local/bin/
+
+    - name: Clone Theos
+      run: |
         git clone --recursive https://github.com/theos/theos.git $HOME/theos
-        export THEOS=$HOME/theos
         echo "THEOS=$HOME/theos" >> $GITHUB_ENV
 
     - name: Setup iOS SDK
@@ -27,7 +33,6 @@ jobs:
         cd $THEOS/sdks
         wget -q https://github.com/xybp888/iOS-SDKs/raw/master/iPhoneOS10.3.sdk.tar.gz
         tar xzf iPhoneOS10.3.sdk.tar.gz
-        ls -la
 
     - name: Build Tweak
       run: |
