@@ -1,0 +1,42 @@
+name: Build Mirror Tweak
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    - name: Setup Theos
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y fakeroot ldid build-essential git sudo
+        git clone --recursive https://github.com/theos/theos.git $HOME/theos
+        export THEOS=$HOME/theos
+        echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+
+    - name: Setup iOS SDK
+      run: |
+        mkdir -p $THEOS/sdks
+        cd $THEOS/sdks
+        wget -q https://github.com/xybp888/iOS-SDKs/raw/master/iPhoneOS10.3.sdk.tar.gz
+        tar xzf iPhoneOS10.3.sdk.tar.gz
+        ls -la
+
+    - name: Build Tweak
+      run: |
+        export THEOS=$HOME/theos
+        cd $GITHUB_WORKSPACE
+        make package FINALPACKAGE=1
+
+    - name: Upload deb artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Mirror-deb
+        path: packages/*.deb
